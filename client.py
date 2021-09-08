@@ -5,13 +5,20 @@ import socket
 import cv2
 import numpy
 import struct
-def video_write(port,cap):
+
+
+PORT = 12340
+HOST = socket.gethostname()
+
+
+
+def tcp_client(port,cap):
 	
 	sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	# 连接服务端
 
-	host = socket.gethostname()
-	address_server = (host, 12340)
+	
+	address_server = (HOST, 12340)
 	sock.connect(address_server)
 	ret, frame = cap.read()
 	encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
@@ -36,6 +43,6 @@ def video_write(port,cap):
 def main():
 	cap = cv2.VideoCapture(0)
 
-	video_write(12340,cap)
+	tcp_client(PORT,cap)
 if __name__ == '__main__':
 	main()

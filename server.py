@@ -7,22 +7,13 @@ import struct
 import time
 from threading import Thread
 
-    
-def recv_size(sock, count):
-    buf = b''
-    while count:
-        newbuf = sock.recv(count)
-        if not newbuf: return None
-        buf += newbuf
-        count -= len(newbuf)
-    return buf
+PORT = 12340
 
-
-def main():
+def tcp_server(port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    host = socket.gethostname()
+    host = ""
 
-    address = (host, 12340)
+    address = (host, port)
     s.bind(address) 
     s.listen(5)
     print ('Waiting for input...')
@@ -51,5 +42,8 @@ def main():
     s.close()
     cv2.destroyAllWindows()
 
+
+def main():
+    tcp_server(PORT)
 if __name__ == '__main__':
     main()
