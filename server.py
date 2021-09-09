@@ -19,11 +19,12 @@ def tcp_server(port):
     s.bind(address) 
     #多线程监听
     s.listen(5)
-    print ('Waiting for input...')
+    print ('Port'+str(port)+' is waiting for input...')
     #阻断等待连接
     conn, addr = s.accept()
     #缓存
     time.sleep(2)
+    print ('Port'+str(port)+' is connected')
 
     while 1:
         try:
@@ -33,19 +34,23 @@ def tcp_server(port):
                 length = struct.unpack('i',head)[0]
             else:
                 break
-
+            #根据图像大小接收图像信息
             stringData = conn.recv(int(length))
+            #图像解码
             data = numpy.frombuffer(stringData, dtype='uint8')
-
             decimg=cv2.imdecode(data,1)
-
-            cv2.imshow('SERVER',decimg)
-            if cv2.waitKey(10) == 27:
+            #图像显示
+            cv2.imshow(str(port),decimg)
+            #设置中断
+            if cv2.waitKey(1) == 27:
                 break
         except:
             pass
+
+    print ('Port'+str(port)+' is disconnect')
+
     s.close()
-    cv2.destroyAllWindows()
+    
 
 
 def main():

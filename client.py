@@ -10,18 +10,19 @@ import struct
 PORT = 12340
 #服务器地址
 HOST = socket.gethostname()
-
+PATH = r".\Demos\demo0.mp4"
 
 #客户端传输函数
-def tcp_client(port,cap):
+def tcp_client(port,host,cap):
 	
 	sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 	# 连接服务端	
-	address_server = (HOST, 12340)
+	address_server = (host, port)
 	sock.connect(address_server)
 	#读取视频流
 	ret, frame = cap.read()
-	#图片编码参数
+	frame = cv2.resize(frame,dsize=(800,450))
+	
 	encode_param=[int(cv2.IMWRITE_JPEG_QUALITY),90]
 	while ret:
 		#图像编码
@@ -36,16 +37,18 @@ def tcp_client(port,cap):
 		sock.send(stringData)
 		#读取视频流
 		ret, frame = cap.read()
+		frame = cv2.resize(frame,dsize=(800,450))
+
 
 	cap.release()
-	cv2.destroyAllWindows()
 
 
 def main():
 	#设定视频流
-	cap = cv2.VideoCapture(0)
+	cap = cv2.VideoCapture(PATH)
+
 	#客户端传输函数
-	tcp_client(PORT,cap)
+	tcp_client(PORT,HOST,cap)
 
 if __name__ == '__main__':
 	main()
